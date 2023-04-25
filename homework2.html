@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+
+		<title> Yahtzee </title>
+
+		<style type = 'text/css'>
+			<!--
+				h1 {font-size: 35pt; text-align: center}
+
+				div.a {text-align: center}
+
+				table.a {margin-left: auto; margin-right: auto;}
+
+				td.a {text-align: right; font-weight: bolder; font-family: Arial;}
+
+				td.b {border: 1px inset #676767; background-color: #aeaeff; width: 2em;}
+
+				td.c {width: 100px; text-align: right}
+
+				button.a {border: 1px outset; font-family: 'Times New Roman'; font-size: 16pt; color: #f4d6e8 ; background-color: #5701ce}
+
+				button.b {border: 1px outset; font-family: 'Times New Roman'; font-size: 13pt; background-color: #AFBFBF; color: #00082F;}
+
+			-->
+		</style>
+
+		<script language = 'JavaScript'>
+			<!--
+				var value = new Array(0,0,0,0,0);
+				var f = new Array(0,0,0,0,0,0,0);
+				var dice = new Array(false,false,false,false,false);
+				var scoreArray = new Array(false,false,false,false,false,false,false,false,false);
+				var rollCount = 0;
+				var total = 0;
+				var click = false;
+
+				function roll() {
+					if (rollCount < 3) {
+						f[1]=f[2]=f[3]=f[4]=f[5]=f[6]=0;
+						for(var i = 0; i < 5 ; i++) {
+							var d = document.getElementById('d'+i);
+							if (!dice[i]) {
+								value[i] = Math.floor(6*Math.random())+1;
+								d.src = 'pix/dice' + value[i] + '.gif';
+							}
+							f[value[i]] += 1;
+						}	
+					}
+					rollCount += 1;
+					click = false;
+				}
+
+				function block(i) {
+					var t = document.getElementById('d'+i);
+					dice[i] = !dice[i];
+					if (dice[i]) 
+						{t.src = 'pix/diceX' + value[i]+ '.gif';}
+					else
+						{t.src = 'pix/dice' + value[i]+ '.gif';}
+				}
+
+				function clearBlock() {
+					for (var i = 0; i < 5; i++) {
+						var e = document.getElementById('d' + i);
+						e.src = 'pix/dice0.gif';
+						dice[i] = false;
+						value[i] = 0;
+					}
+				}
+
+				function previewScore(j) {
+					if (scoreArray[j] == false) {
+						var b = document.getElementById('s'+j);
+						var current = 0;
+						var sum = 0;
+						for( var i = 0; i < 5; i++) {
+							sum += value[i];
+						}
+						if (j == 6) {
+							b.innerHTML = 0;
+							for (var h = 0; h < 7; h++) {
+								if (f[h] >= 3) {
+									current = sum;
+									b.innerHTML = sum;
+								}
+							}
+							return current;
+						}
+						else if (j == 7) {
+							b.innerHTML = 0;
+							for (var h = 0; h < 7; h++) {
+								if (f[h] >= 4) {
+									current = sum;
+									b.innerHTML = sum;
+								}
+							}
+							return current;
+						}
+						else if (j == 8) {
+							b.innerHTML = 0;
+							for (var h = 0; h < 7; h++) {
+								if (f[h] >= 5) {
+									current = sum;
+									b.innerHTML = sum;
+								}
+							}
+							return current;
+						}
+						else {
+							current = f[j+1]*(j+1);
+							b.innerHTML = current;
+							return current;
+						}
+					}
+				}
+
+				function score(j) {
+					if (scoreArray[j] == false && click == false) {
+						rollCount = 0;
+						click = true;
+						var c = document.getElementById('t');
+						total += previewScore(j);
+						t.innerHTML = total;
+						clearBlock();
+						scoreArray[j] = true;
+					}
+				}
+
+				function clearScore(j) {
+					if (scoreArray[j] == false) {
+						var a = document.getElementById('s'+j);
+						a.innerHTML = '';
+					}
+				}
+
+				function newGame() {
+					clearBlock();
+					for (var i = 0; i < 9; i++) {
+						scoreArray[i] = false;
+						clearScore(i);
+					}
+					var g = document.getElementById('t');
+					t.innerHTML = '';
+					rollCount = 0;
+					total = 0;
+					click = false;
+				}
+
+			//-->
+
+		</script>
+
+	</head>
+
+	<body>
+
+		<h1> Yahtzee </h1>
+
+		<div class = 'a'>
+			<img id = 'd0' onClick = 'block(0)' src = 'pix/dice0.gif'>
+			<img id = 'd1' onClick = 'block(1)' src = 'pix/dice0.gif'>
+			<img id = 'd2' onClick = 'block(2)' src = 'pix/dice0.gif'>
+			<img id = 'd3' onClick = 'block(3)' src = 'pix/dice0.gif'>
+			<img id = 'd4' onClick = 'block(4)' src = 'pix/dice0.gif'>
+		</div>
+
+		<table class = 'a'>
+			<tr> <td class = 'a'> 1's </td> <td id = 's0' class = 'b' onMouseOver = 'previewScore(0)' onMouseOut = 'clearScore(0)' onClick = 'score(0)'> </td> <td class = 'c' rowspan = '5'> <button onClick = 'roll()' class = 'a'> Roll </button> </td> </tr>
+			<tr> <td class = 'a'> 2's </td> <td id = 's1' class = 'b' onMouseOver = 'previewScore(1)' onMouseOut = 'clearScore(1)' onClick = 'score(1)'> </td> </tr>
+			<tr> <td class = 'a'> 3's </td> <td id = 's2' class = 'b' onMouseOver = 'previewScore(2)' onMouseOut = 'clearScore(2)' onClick = 'score(2)'> </td> </tr>
+			<tr> <td class = 'a'> 4's </td> <td id = 's3' class = 'b' onMouseOver = 'previewScore(3)' onMouseOut = 'clearScore(3)' onClick = 'score(3)'> </td> </tr>
+			<tr> <td class = 'a'> 5's </td> <td id = 's4' class = 'b' onMouseOver = 'previewScore(4)' onMouseOut = 'clearScore(4)' onClick = 'score(4)'> </td> </tr>
+			<tr> <td class = 'a'> 6's </td> <td id = 's5' class = 'b' onMouseOver = 'previewScore(5)' onMouseOut = 'clearScore(5)' onClick = 'score(5)'> </td> <td class = 'c' rowspan = '5'> <button onClick = 'newGame()' class = 'b'> New game </button> </td> </tr>
+			<tr> <td class = 'a'> 3 of a kind </td> <td id = 's6' class = 'b' onMouseOver = 'previewScore(6)' onMouseOut = 'clearScore(6)' onClick = 'score(6)'> </td> </tr>
+			<tr> <td class = 'a'> 4 of a kind </td> <td id = 's7' class = 'b' onMouseOver = 'previewScore(7)' onMouseOut = 'clearScore(7)' onClick = 'score(7)'> </td> </tr>
+			<tr> <td class = 'a'> Yahtzee </td> <td id = 's8' class = 'b' onMouseOver = 'previewScore(8)' onMouseOut = 'clearScore(8)' onClick = 'score(8)'> </td> </tr>
+			<tr> <td class = 'a'> Total </td> <td id = 't' class = 'b'> </td> </tr>
+		</table>
+
+	</body>
+
+</html>
+<!--	
+	Name:	John Rosso
+	Course:	235.01
+	HomeWork:	#2
+	Git-Hub:	https://github.com/yourName/yourHomeWork
+-->
